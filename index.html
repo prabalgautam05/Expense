@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-pie"></i> Personal Budget Planner</h1>
+            <p>Take control of your finances with smart budgeting</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">
+                    <i class="fas fa-edit"></i>
+                    Budget Input
+                </h2>
+
+                <div class="month-selector no-print">
+                    <button class="month-btn active" data-month="January">Jan</button>
+                    <button class="month-btn" data-month="February">Feb</button>
+                    <button class="month-btn" data-month="March">Mar</button>
+                    <button class="month-btn" data-month="April">Apr</button>
+                    <button class="month-btn" data-month="May">May</button>
+                    <button class="month-btn" data-month="June">Jun</button>
+                    <button class="month-btn" data-month="July">Jul</button>
+                    <button class="month-btn" data-month="August">Aug</button>
+                    <button class="month-btn" data-month="September">Sep</button>
+                    <button class="month-btn" data-month="October">Oct</button>
+                    <button class="month-btn" data-month="November">Nov</button>
+                    <button class="month-btn" data-month="December">Dec</button>
+                </div>
+
+                <div class="input-group">
+                    <label for="salary">Monthly Salary (₹)</label>
+                    <input type="number" id="salary" placeholder="Enter your monthly salary" min="0">
+                </div>
+
+                <div id="categories">
+                    <div class="category-item">
+                        <input type="text" placeholder="Fixed Expenses" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <input type="text" placeholder="House Maintenance" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <input type="text" placeholder="Trip Savings" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <input type="text" placeholder="Stock Investment" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <input type="text" placeholder="Emergency Fund" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <input type="text" placeholder="Personal Savings" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
+                        <button class="remove-category" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="add-category-btn no-print" onclick="addCategory()">
+                    <i class="fas fa-plus"></i> Add Category
+                </button>
+
+                <div class="savings-goal">
+                    <h3 style="margin-bottom: 15px; color: #2d3436;">
+                        <i class="fas fa-target"></i> Savings Goal
+                    </h3>
+                    <div class="goal-input no-print">
+                        <input type="number" id="savingsGoal" placeholder="Enter your savings goal (₹)" min="0">
+                        <button class="set-goal-btn" onclick="setSavingsGoal()">Set Goal</button>
+                    </div>
+                    <div id="goalProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Financial Summary
+                </h2>
+
+                <div class="summary-cards">
+                    <div class="summary-card card-income">
+                        <h3>Monthly Income</h3>
+                        <div class="amount" id="totalIncome">₹0</div>
+                    </div>
+                    <div class="summary-card card-expenses">
+                        <h3>Total Expenses</h3>
+                        <div class="amount" id="totalExpenses">₹0</div>
+                    </div>
+                    <div class="summary-card card-leftover">
+                        <h3>Leftover</h3>
+                        <div class="amount" id="leftover">₹0</div>
+                    </div>
+                    <div class="summary-card card-investments">
+                        <h3>Total Investments</h3>
+                        <div class="amount" id="totalInvestments">₹0</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="budgetChart"></canvas>
+                </div>
+
+                <div class="export-section no-print">
+                    <button class="export-btn" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i>
+                        Export as PDF
+                    </button>
+                    <button class="export-btn" onclick="clearData()">
+                        <i class="fas fa-trash"></i>
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
