@@ -74,22 +74,26 @@
 
         .month-selector {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
             margin-bottom: 25px;
         }
 
         .month-btn {
-            padding: 8px 12px;
+            padding: 10px 8px;
             border: 2px solid #4facfe;
             background: white;
             color: #4facfe;
-            border-radius: 20px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .month-btn.active {
@@ -420,63 +424,12 @@
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
-                padding: 20px;
+                padding: 15px;
                 gap: 20px;
             }
             
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .summary-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .month-selector {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
-            }
-            
-            .month-btn {
-                padding: 6px 8px;
-                font-size: 0.8rem;
-            }
-            
-            .category-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .category-name, .category-amount {
-                width: 100%;
-            }
-            
-            .tag-selector {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .summary-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            .export-section {
-                justify-content: center;
-            }
-            
-            .month-selector {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 5px;
-            }
-            
-            .month-btn {
-                padding: 5px 6px;
-                font-size: 0.75rem;
-            }
-            
             .header {
-                padding: 20px;
+                padding: 20px 15px;
             }
             
             .header h1 {
@@ -484,7 +437,167 @@
             }
             
             .input-section, .summary-section {
-                padding: 20px;
+                padding: 20px 15px;
+            }
+            
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .month-selector {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 4px;
+            }
+            
+            .month-btn {
+                padding: 8px 4px;
+                font-size: 0.7rem;
+                min-height: 35px;
+                border-radius: 8px;
+            }
+            
+            .category-item {
+                padding: 15px 10px;
+            }
+            
+            .category-row {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .category-name, .category-amount {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            .tag-selector {
+                justify-content: center;
+                gap: 3px;
+            }
+            
+            .tag-btn {
+                padding: 6px 8px;
+                font-size: 0.7rem;
+            }
+            
+            .remove-category {
+                align-self: center;
+                margin-top: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 15px 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .main-content {
+                padding: 10px;
+                gap: 15px;
+            }
+            
+            .input-section, .summary-section {
+                padding: 15px 10px;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .summary-card {
+                padding: 15px;
+            }
+            
+            .summary-card .amount {
+                font-size: 1.3rem;
+            }
+            
+            .month-selector {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3px;
+            }
+            
+            .month-btn {
+                padding: 6px 2px;
+                font-size: 0.65rem;
+                min-height: 32px;
+                border-radius: 6px;
+                border-width: 1px;
+            }
+            
+            .category-item {
+                padding: 12px 8px;
+            }
+            
+            .tag-selector {
+                gap: 2px;
+            }
+            
+            .tag-btn {
+                padding: 4px 6px;
+                font-size: 0.65rem;
+                border-radius: 10px;
+            }
+            
+            .export-section {
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .export-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .goal-input {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .goal-input input, .set-goal-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .month-selector {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2px;
+            }
+            
+            .month-btn {
+                font-size: 0.6rem;
+                min-height: 30px;
+                padding: 4px 1px;
+            }
+            
+            .tag-btn {
+                font-size: 0.6rem;
+                padding: 3px 5px;
             }
         }
 
@@ -587,77 +700,4 @@
                     </div>
                     <div class="summary-card card-expenses">
                         <h3>Total Expenses</h3>
-                        <div class="amount" id="totalExpenses">₹0</div>
-                    </div>
-                    <div class="summary-card card-leftover">
-                        <h3>Leftover</h3>
-                        <div class="amount" id="leftover">₹0</div>
-                    </div>
-                    <div class="summary-card card-investments">
-                        <h3>Total Investments</h3>
-                        <div class="amount" id="totalInvestments">₹0</div>
-                    </div>
-                </div>
-
-                <div class="tag-summary">
-                    <h4><i class="fas fa-tags"></i> Spending by Category</h4>
-                    <div class="tag-breakdown" id="tagBreakdown">
-                        <!-- Tag breakdown will be populated here -->
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <canvas id="budgetChart"></canvas>
-                </div>
-
-                <div class="export-section no-print">
-                    <button class="export-btn" onclick="exportToPDF()">
-                        <i class="fas fa-file-pdf"></i>
-                        Export as PDF
-                    </button>
-                    <button class="export-btn" onclick="clearData()">
-                        <i class="fas fa-trash"></i>
-                        Clear Data
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let currentMonth = 'January';
-        let budgetData = {};
-        let chart = null;
-        let savingsGoal = 0;
-
-        // Investment categories that should be counted as investments
-        const investmentKeywords = ['investment', 'savings', 'fund', 'sip', 'mutual', 'stock'];
-
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            setupEventListeners();
-            updateDisplay();
-        });
-
-        function setupEventListeners() {
-            // Month selector
-            document.querySelectorAll('.month-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelector('.month-btn.active').classList.remove('active');
-                    this.classList.add('active');
-                    currentMonth = this.dataset.month;
-                    loadData();
-                    updateDisplay();
-                });
-            });
-
-            // Salary input
-            document.getElementById('salary').addEventListener('input', function() {
-                saveData();
-                updateDisplay();
-            });
-
-            // Category inputs and tag selectors
-            document.addEventListener('input', function(e) {
-                if (e.target.classList.contains('category-name') || e.target.classList.contai
+                        <div class="amount" id="totalEx
