@@ -73,37 +73,37 @@
         }
 
         .month-selector {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
             margin-bottom: 25px;
         }
 
-        .month-btn {
-            padding: 10px 8px;
+        .month-dropdown {
+            width: 100%;
+            padding: 12px 15px;
             border: 2px solid #4facfe;
+            border-radius: 10px;
             background: white;
-            color: #4facfe;
-            border-radius: 12px;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 0.8rem;
-            text-align: center;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234facfe' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
         }
 
-        .month-btn.active {
-            background: #4facfe;
-            color: white;
+        .month-dropdown:focus {
+            outline: none;
+            border-color: #3a9ef0;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
-        .month-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        .month-dropdown:hover {
+            border-color: #3a9ef0;
+            transform: translateY(-1px);
         }
 
         .input-group {
@@ -445,16 +445,9 @@
                 gap: 10px;
             }
             
-            .month-selector {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 4px;
-            }
-            
-            .month-btn {
-                padding: 8px 4px;
-                font-size: 0.7rem;
-                min-height: 35px;
-                border-radius: 8px;
+            .month-dropdown {
+                font-size: 0.9rem;
+                padding: 10px 12px;
             }
             
             .category-item {
@@ -531,17 +524,9 @@
                 font-size: 1.3rem;
             }
             
-            .month-selector {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 3px;
-            }
-            
-            .month-btn {
-                padding: 6px 2px;
-                font-size: 0.65rem;
-                min-height: 32px;
-                border-radius: 6px;
-                border-width: 1px;
+            .month-dropdown {
+                font-size: 0.85rem;
+                padding: 8px 10px;
             }
             
             .category-item {
@@ -583,24 +568,6 @@
             }
         }
 
-        @media (max-width: 360px) {
-            .month-selector {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2px;
-            }
-            
-            .month-btn {
-                font-size: 0.6rem;
-                min-height: 30px;
-                padding: 4px 1px;
-            }
-            
-            .tag-btn {
-                font-size: 0.6rem;
-                padding: 3px 5px;
-            }
-        }
-
         .no-print {
             /* This class will hide elements during PDF generation */
         }
@@ -627,18 +594,20 @@
                 </h2>
 
                 <div class="month-selector no-print">
-                    <button class="month-btn active" data-month="January">Jan</button>
-                    <button class="month-btn" data-month="February">Feb</button>
-                    <button class="month-btn" data-month="March">Mar</button>
-                    <button class="month-btn" data-month="April">Apr</button>
-                    <button class="month-btn" data-month="May">May</button>
-                    <button class="month-btn" data-month="June">Jun</button>
-                    <button class="month-btn" data-month="July">Jul</button>
-                    <button class="month-btn" data-month="August">Aug</button>
-                    <button class="month-btn" data-month="September">Sep</button>
-                    <button class="month-btn" data-month="October">Oct</button>
-                    <button class="month-btn" data-month="November">Nov</button>
-                    <button class="month-btn" data-month="December">Dec</button>
+                    <select class="month-dropdown" id="monthSelector">
+                        <option value="January">📅 January</option>
+                        <option value="February">📅 February</option>
+                        <option value="March">📅 March</option>
+                        <option value="April">📅 April</option>
+                        <option value="May">📅 May</option>
+                        <option value="June">📅 June</option>
+                        <option value="July">📅 July</option>
+                        <option value="August">📅 August</option>
+                        <option value="September">📅 September</option>
+                        <option value="October">📅 October</option>
+                        <option value="November">📅 November</option>
+                        <option value="December">📅 December</option>
+                    </select>
                 </div>
 
                 <div class="input-group">
@@ -700,4 +669,501 @@
                     </div>
                     <div class="summary-card card-expenses">
                         <h3>Total Expenses</h3>
-                        <div class="amount" id="totalEx
+                        <div class="amount" id="totalExpenses">₹0</div>
+                    </div>
+                    <div class="summary-card card-leftover">
+                        <h3>Leftover</h3>
+                        <div class="amount" id="leftover">₹0</div>
+                    </div>
+                    <div class="summary-card card-investments">
+                        <h3>Total Investments</h3>
+                        <div class="amount" id="totalInvestments">₹0</div>
+                    </div>
+                </div>
+
+                <div class="tag-summary">
+                    <h4><i class="fas fa-tags"></i> Spending by Category</h4>
+                    <div class="tag-breakdown" id="tagBreakdown">
+                        <!-- Tag breakdown will be populated here -->
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="budgetChart"></canvas>
+                </div>
+
+                <div class="export-section no-print">
+                    <button class="export-btn" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i>
+                        Export as PDF
+                    </button>
+                    <button class="export-btn" onclick="clearData()">
+                        <i class="fas fa-trash"></i>
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMonth = 'January';
+        let budgetData = {};
+        let chart = null;
+        let savingsGoal = 0;
+
+        // Investment categories that should be counted as investments
+        const investmentKeywords = ['investment', 'savings', 'fund', 'sip', 'mutual', 'stock'];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupEventListeners();
+            updateDisplay();
+        });
+
+        function setupEventListeners() {
+            // Month selector dropdown
+            const monthSelector = document.getElementById('monthSelector');
+            monthSelector.addEventListener('change', function() {
+                currentMonth = this.value;
+                loadData();
+                updateDisplay();
+            });
+
+            // Salary input
+            document.getElementById('salary').addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+
+            // Category inputs and tag selectors - Fixed event delegation
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('category-name') || e.target.classList.contains('category-amount')) {
+                    saveData();
+                    updateDisplay();
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-btn')) {
+                    // Remove active class from all tags in this category
+                    const tagButtons = e.target.parentElement.querySelectorAll('.tag-btn');
+                    tagButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked tag
+                    e.target.classList.add('active');
+                    
+                    saveData();
+                    updateDisplay();
+                }
+            });
+        }
+
+        function addCategory() {
+            const categoriesContainer = document.getElementById('categories');
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'category-item';
+            categoryItem.innerHTML = `
+                <div class="category-row">
+                    <input type="text" placeholder="Category name" class="category-name">
+                    <input type="number" placeholder="0" class="category-amount" min="0">
+                    <button class="remove-category" onclick="removeCategory(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="tag-selector">
+                    <button class="tag-btn" data-tag="Food">🍕 Food</button>
+                    <button class="tag-btn" data-tag="Savings">💰 Savings</button>
+                    <button class="tag-btn" data-tag="Personal">👤 Personal</button>
+                    <button class="tag-btn" data-tag="Transport">🚗 Transport</button>
+                    <button class="tag-btn" data-tag="Bills">🧾 Bills</button>
+                    <button class="tag-btn active" data-tag="Other">🏷️ Other</button>
+                </div>
+            `;
+            categoriesContainer.appendChild(categoryItem);
+            
+            // Add event listeners for the new category
+            const nameInput = categoryItem.querySelector('.category-name');
+            const amountInput = categoryItem.querySelector('.category-amount');
+            
+            nameInput.addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+            
+            amountInput.addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+        }
+
+        function removeCategory(button) {
+            if (document.querySelectorAll('.category-item').length > 1) {
+                button.closest('.category-item').remove();
+                saveData();
+                updateDisplay();
+            } else {
+                alert('You must have at least one category!');
+            }
+        }
+
+        function saveData() {
+            if (!budgetData[currentMonth]) {
+                budgetData[currentMonth] = {};
+            }
+
+            budgetData[currentMonth].salary = parseFloat(document.getElementById('salary').value) || 0;
+            budgetData[currentMonth].categories = [];
+
+            document.querySelectorAll('.category-item').forEach(item => {
+                const name = item.querySelector('.category-name').value || 'Unnamed Category';
+                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                const activeTag = item.querySelector('.tag-btn.active');
+                const tag = activeTag ? activeTag.dataset.tag : 'Other';
+                
+                budgetData[currentMonth].categories.push({ name, amount, tag });
+            });
+
+            // Save to localStorage
+            try {
+                localStorage.setItem('budgetPlannerData', JSON.stringify(budgetData));
+                localStorage.setItem('savingsGoal', savingsGoal.toString());
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+        }
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('budgetPlannerData');
+                const savedGoal = localStorage.getItem('savingsGoal');
+                
+                if (saved) {
+                    budgetData = JSON.parse(saved);
+                }
+                if (savedGoal) {
+                    savingsGoal = parseFloat(savedGoal);
+                    document.getElementById('savingsGoal').value = savingsGoal;
+                    if (savingsGoal > 0) {
+                        document.getElementById('goalProgress').style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.log('Could not load data from localStorage');
+                budgetData = {};
+            }
+
+            // Update month selector
+            document.getElementById('monthSelector').value = currentMonth;
+
+            // Load current month data
+            if (budgetData[currentMonth]) {
+                document.getElementById('salary').value = budgetData[currentMonth].salary || '';
+                
+                // Clear existing categories
+                document.getElementById('categories').innerHTML = '';
+                
+                // Load saved categories
+                if (budgetData[currentMonth].categories && budgetData[currentMonth].categories.length > 0) {
+                    budgetData[currentMonth].categories.forEach(category => {
+                        addCategoryWithData(category.name, category.amount, category.tag || 'Other');
+                    });
+                } else {
+                    // Add default category if none exist
+                    addCategoryWithData('Fixed Expenses', 0, 'Bills');
+                }
+            } else {
+                // Clear form for new month
+                document.getElementById('salary').value = '';
+                document.getElementById('categories').innerHTML = '';
+                addCategoryWithData('Fixed Expenses', 0, 'Bills');
+            }
+        }
+
+        function addCategoryWithData(name, amount, tag = 'Other') {
+            const categoriesContainer = document.getElementById('categories');
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'category-item';
+            categoryItem.innerHTML = `
+                <div class="category-row">
+                    <input type="text" value="${name}" class="category-name">
+                    <input type="number" value="${amount}" class="category-amount" min="0">
+                    <button class="remove-category" onclick="removeCategory(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="tag-selector">
+                    <button class="tag-btn ${tag === 'Food' ? 'active' : ''}" data-tag="Food">🍕 Food</button>
+                    <button class="tag-btn ${tag === 'Savings' ? 'active' : ''}" data-tag="Savings">💰 Savings</button>
+                    <button class="tag-btn ${tag === 'Personal' ? 'active' : ''}" data-tag="Personal">👤 Personal</button>
+                    <button class="tag-btn ${tag === 'Transport' ? 'active' : ''}" data-tag="Transport">🚗 Transport</button>
+                    <button class="tag-btn ${tag === 'Bills' ? 'active' : ''}" data-tag="Bills">🧾 Bills</button>
+                    <button class="tag-btn ${tag === 'Other' ? 'active' : ''}" data-tag="Other">🏷️ Other</button>
+                </div>
+            `;
+            categoriesContainer.appendChild(categoryItem);
+            
+            // Add specific event listeners for this category
+            const nameInput = categoryItem.querySelector('.category-name');
+            const amountInput = categoryItem.querySelector('.category-amount');
+            
+            nameInput.addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+            
+            amountInput.addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+        }
+
+        function updateDisplay() {
+            const salary = parseFloat(document.getElementById('salary').value) || 0;
+            let totalExpenses = 0;
+            let totalInvestments = 0;
+            const categories = [];
+            const tagTotals = {};
+
+            // Calculate totals
+            document.querySelectorAll('.category-item').forEach(item => {
+                const name = item.querySelector('.category-name').value || 'Unnamed Category';
+                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                const activeTag = item.querySelector('.tag-btn.active');
+                const tag = activeTag ? activeTag.dataset.tag : 'Other';
+                
+                if (amount > 0) {
+                    categories.push({ name, amount, tag });
+                    totalExpenses += amount;
+                    
+                    // Track tag totals
+                    if (!tagTotals[tag]) {
+                        tagTotals[tag] = 0;
+                    }
+                    tagTotals[tag] += amount;
+                    
+                    // Check if this category is an investment
+                    const isInvestment = investmentKeywords.some(keyword => 
+                        name.toLowerCase().includes(keyword)
+                    ) || tag === 'Savings';
+                    
+                    if (isInvestment) {
+                        totalInvestments += amount;
+                    }
+                }
+            });
+
+            const leftover = salary - totalExpenses;
+
+            // Update summary cards
+            document.getElementById('totalIncome').textContent = `₹${salary.toLocaleString('en-IN')}`;
+            document.getElementById('totalExpenses').textContent = `₹${totalExpenses.toLocaleString('en-IN')}`;
+            document.getElementById('leftover').textContent = `₹${leftover.toLocaleString('en-IN')}`;
+            document.getElementById('totalInvestments').textContent = `₹${totalInvestments.toLocaleString('en-IN')}`;
+
+            // Update leftover card color based on positive/negative
+            const leftoverCard = document.querySelector('.card-leftover');
+            if (leftover < 0) {
+                leftoverCard.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+            } else {
+                leftoverCard.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            }
+
+            // Update tag breakdown
+            updateTagBreakdown(tagTotals);
+
+            // Update chart
+            updateChart(categories);
+
+            // Update savings goal progress
+            updateSavingsGoalProgress(totalInvestments);
+        }
+
+        function updateTagBreakdown(tagTotals) {
+            const tagBreakdown = document.getElementById('tagBreakdown');
+            tagBreakdown.innerHTML = '';
+
+            const tagEmojis = {
+                'Food': '🍕',
+                'Savings': '💰',
+                'Personal': '👤',
+                'Transport': '🚗',
+                'Bills': '🧾',
+                'Other': '🏷️'
+            };
+
+            Object.entries(tagTotals).forEach(([tag, amount]) => {
+                const tagItem = document.createElement('div');
+                tagItem.className = 'tag-item';
+                tagItem.innerHTML = `${tagEmojis[tag]} ${tag}: ₹${amount.toLocaleString('en-IN')}`;
+                tagBreakdown.appendChild(tagItem);
+            });
+        }
+
+        function updateChart(categories) {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (categories.length === 0) {
+                return;
+            }
+
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF',
+                '#4BC0C0', '#FF6384', '#36A2EB', '#FFCE56'
+            ];
+
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categories.map(cat => `${cat.name} (${cat.tag})`),
+                    datasets: [{
+                        data: categories.map(cat => cat.amount),
+                        backgroundColor: colors.slice(0, categories.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const percentage = ((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                                    return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setSavingsGoal() {
+            const goalInput = document.getElementById('savingsGoal');
+            savingsGoal = parseFloat(goalInput.value) || 0;
+            
+            if (savingsGoal > 0) {
+                document.getElementById('goalProgress').style.display = 'block';
+                updateSavingsGoalProgress();
+                saveData();
+            } else {
+                document.getElementById('goalProgress').style.display = 'none';
+            }
+        }
+
+        function updateSavingsGoalProgress(currentSavings = null) {
+            if (savingsGoal <= 0) return;
+
+            if (currentSavings === null) {
+                currentSavings = 0;
+                document.querySelectorAll('.category-item').forEach(item => {
+                    const name = item.querySelector('.category-name').value || '';
+                    const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                    const activeTag = item.querySelector('.tag-btn.active');
+                    const tag = activeTag ? activeTag.dataset.tag : 'Other';
+                    
+                    const isInvestment = investmentKeywords.some(keyword => 
+                        name.toLowerCase().includes(keyword)
+                    ) || tag === 'Savings';
+                    
+                    if (isInvestment) {
+                        currentSavings += amount;
+                    }
+                });
+            }
+
+            const progressPercentage = Math.min((currentSavings / savingsGoal) * 100, 100);
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = 
+                `₹${currentSavings.toLocaleString('en-IN')} / ₹${savingsGoal.toLocaleString('en-IN')} (${progressPercentage.toFixed(1)}%)`;
+        }
+
+        function exportToPDF() {
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 0.5,
+                filename: `Budget_${currentMonth}_${new Date().getFullYear()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
+
+            // Hide elements that shouldn't be in PDF
+            const noPrintElements = document.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.display = 'none');
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore hidden elements
+                noPrintElements.forEach(el => el.style.display = '');
+            });
+        }
+
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                // Clear current month data
+                document.getElementById('salary').value = '';
+                document.querySelectorAll('.category-amount').forEach(input => {
+                    input.value = '';
+                });
+                
+                // Clear all stored data
+                budgetData = {};
+                savingsGoal = 0;
+                document.getElementById('savingsGoal').value = '';
+                document.getElementById('goalProgress').style.display = 'none';
+                
+                try {
+                    localStorage.removeItem('budgetPlannerData');
+                    localStorage.removeItem('savingsGoal');
+                } catch (e) {
+                    console.log('Could not clear localStorage');
+                }
+                
+                updateDisplay();
+            }
+        }
+
+        // Auto-save functionality
+        setInterval(() => {
+            if (document.getElementById('salary').value || 
+                Array.from(document.querySelectorAll('.category-amount')).some(input => input.value)) {
+                saveData();
+            }
+        }, 30000); // Auto-save every 30 seconds
+
+        // Initialize savings goal display if exists
+        if (savingsGoal > 0) {
+            document.getElementById('goalProgress').style.display = 'block';
+            updateSavingsGoalProgress();
+        }
+    </script>
+</body>
+</html>
