@@ -73,21 +73,23 @@
         }
 
         .month-selector {
-            display: flex;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
             margin-bottom: 25px;
-            flex-wrap: wrap;
         }
 
         .month-btn {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border: 2px solid #4facfe;
             background: white;
             color: #4facfe;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
         .month-btn.active {
@@ -150,11 +152,72 @@
         .category-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
-            padding: 10px;
+            padding: 12px;
             background: #f8f9fa;
             border-radius: 10px;
+            flex-wrap: wrap;
+        }
+
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .category-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-name {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .category-amount {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .tag-selector {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .tag-btn {
+            padding: 4px 10px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .tag-btn.active {
+            background: #4facfe;
+            color: white;
+            border-color: #4facfe;
+        }
+
+        .tag-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .tag-btn.active:hover {
+            background: #3a9ef0;
         }
 
         .remove-category {
@@ -169,6 +232,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
 
         .remove-category:hover {
@@ -327,6 +391,32 @@
             color: #2d3436;
         }
 
+        .tag-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tag-summary h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .tag-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-item {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid #ddd;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -343,6 +433,25 @@
             }
             
             .month-selector {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+            
+            .month-btn {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .category-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .category-name, .category-amount {
+                width: 100%;
+            }
+            
+            .tag-selector {
                 justify-content: center;
             }
         }
@@ -354,6 +463,28 @@
             
             .export-section {
                 justify-content: center;
+            }
+            
+            .month-selector {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+            
+            .month-btn {
+                padding: 5px 6px;
+                font-size: 0.75rem;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .input-section, .summary-section {
+                padding: 20px;
             }
         }
 
@@ -404,46 +535,21 @@
 
                 <div id="categories">
                     <div class="category-item">
-                        <input type="text" placeholder="Fixed Expenses" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="category-item">
-                        <input type="text" placeholder="House Maintenance" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="category-item">
-                        <input type="text" placeholder="Trip Savings" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="category-item">
-                        <input type="text" placeholder="Stock Investment" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="category-item">
-                        <input type="text" placeholder="Emergency Fund" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="category-item">
-                        <input type="text" placeholder="Personal Savings" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                        <button class="remove-category" onclick="removeCategory(this)">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <div class="category-row">
+                            <input type="text" placeholder="Fixed Expenses" class="category-name">
+                            <input type="number" placeholder="0" class="category-amount" min="0">
+                            <button class="remove-category" onclick="removeCategory(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="tag-selector">
+                            <button class="tag-btn" data-tag="Food">🍕 Food</button>
+                            <button class="tag-btn" data-tag="Savings">💰 Savings</button>
+                            <button class="tag-btn" data-tag="Personal">👤 Personal</button>
+                            <button class="tag-btn" data-tag="Transport">🚗 Transport</button>
+                            <button class="tag-btn" data-tag="Bills">🧾 Bills</button>
+                            <button class="tag-btn" data-tag="Other">🏷️ Other</button>
+                        </div>
                     </div>
                 </div>
 
@@ -493,6 +599,13 @@
                     </div>
                 </div>
 
+                <div class="tag-summary">
+                    <h4><i class="fas fa-tags"></i> Spending by Category</h4>
+                    <div class="tag-breakdown" id="tagBreakdown">
+                        <!-- Tag breakdown will be populated here -->
+                    </div>
+                </div>
+
                 <div class="chart-container">
                     <canvas id="budgetChart"></canvas>
                 </div>
@@ -534,6 +647,7 @@
                     document.querySelector('.month-btn.active').classList.remove('active');
                     this.classList.add('active');
                     currentMonth = this.dataset.month;
+                    loadData();
                     updateDisplay();
                 });
             });
@@ -544,340 +658,6 @@
                 updateDisplay();
             });
 
-            // Category inputs
+            // Category inputs and tag selectors
             document.addEventListener('input', function(e) {
-                if (e.target.classList.contains('category-name') || e.target.classList.contains('category-amount')) {
-                    saveData();
-                    updateDisplay();
-                }
-            });
-        }
-
-        function addCategory() {
-            const categoriesContainer = document.getElementById('categories');
-            const categoryItem = document.createElement('div');
-            categoryItem.className = 'category-item';
-            categoryItem.innerHTML = `
-                <input type="text" placeholder="Category name" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                <input type="number" placeholder="0" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                <button class="remove-category" onclick="removeCategory(this)">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            categoriesContainer.appendChild(categoryItem);
-            
-            // Add event listeners to new inputs
-            categoryItem.querySelector('.category-name').addEventListener('input', function() {
-                saveData();
-                updateDisplay();
-            });
-            categoryItem.querySelector('.category-amount').addEventListener('input', function() {
-                saveData();
-                updateDisplay();
-            });
-        }
-
-        function removeCategory(button) {
-            if (document.querySelectorAll('.category-item').length > 1) {
-                button.parentElement.remove();
-                saveData();
-                updateDisplay();
-            } else {
-                alert('You must have at least one category!');
-            }
-        }
-
-        function saveData() {
-            if (!budgetData[currentMonth]) {
-                budgetData[currentMonth] = {};
-            }
-
-            budgetData[currentMonth].salary = parseFloat(document.getElementById('salary').value) || 0;
-            budgetData[currentMonth].categories = [];
-
-            document.querySelectorAll('.category-item').forEach(item => {
-                const name = item.querySelector('.category-name').value || 'Unnamed Category';
-                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
-                budgetData[currentMonth].categories.push({ name, amount });
-            });
-
-            // Save to localStorage
-            try {
-                localStorage.setItem('budgetPlannerData', JSON.stringify(budgetData));
-                localStorage.setItem('savingsGoal', savingsGoal.toString());
-            } catch (e) {
-                console.log('localStorage not available, using session storage');
-            }
-        }
-
-        function loadData() {
-            try {
-                const saved = localStorage.getItem('budgetPlannerData');
-                const savedGoal = localStorage.getItem('savingsGoal');
-                
-                if (saved) {
-                    budgetData = JSON.parse(saved);
-                }
-                if (savedGoal) {
-                    savingsGoal = parseFloat(savedGoal);
-                    document.getElementById('savingsGoal').value = savingsGoal;
-                }
-            } catch (e) {
-                console.log('Could not load data from localStorage');
-                budgetData = {};
-            }
-
-            // Load current month data
-            if (budgetData[currentMonth]) {
-                document.getElementById('salary').value = budgetData[currentMonth].salary || '';
-                
-                // Clear existing categories
-                document.getElementById('categories').innerHTML = '';
-                
-                // Load saved categories
-                if (budgetData[currentMonth].categories && budgetData[currentMonth].categories.length > 0) {
-                    budgetData[currentMonth].categories.forEach(category => {
-                        addCategoryWithData(category.name, category.amount);
-                    });
-                } else {
-                    // Add default categories if none exist
-                    addCategoryWithData('Fixed Expenses', 0);
-                }
-            }
-        }
-
-        function addCategoryWithData(name, amount) {
-            const categoriesContainer = document.getElementById('categories');
-            const categoryItem = document.createElement('div');
-            categoryItem.className = 'category-item';
-            categoryItem.innerHTML = `
-                <input type="text" value="${name}" class="category-name" style="flex: 1; margin-right: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                <input type="number" value="${amount}" class="category-amount" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" min="0">
-                <button class="remove-category" onclick="removeCategory(this)">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            categoriesContainer.appendChild(categoryItem);
-            
-            // Add event listeners
-            categoryItem.querySelector('.category-name').addEventListener('input', function() {
-                saveData();
-                updateDisplay();
-            });
-            categoryItem.querySelector('.category-amount').addEventListener('input', function() {
-                saveData();
-                updateDisplay();
-            });
-        }
-
-        function updateDisplay() {
-            const salary = parseFloat(document.getElementById('salary').value) || 0;
-            let totalExpenses = 0;
-            let totalInvestments = 0;
-            const categories = [];
-
-            // Calculate totals
-            document.querySelectorAll('.category-item').forEach(item => {
-                const name = item.querySelector('.category-name').value || 'Unnamed Category';
-                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
-                
-                if (amount > 0) {
-                    categories.push({ name, amount });
-                    totalExpenses += amount;
-                    
-                    // Check if this category is an investment
-                    const isInvestment = investmentKeywords.some(keyword => 
-                        name.toLowerCase().includes(keyword)
-                    );
-                    if (isInvestment) {
-                        totalInvestments += amount;
-                    }
-                }
-            });
-
-            const leftover = salary - totalExpenses;
-
-            // Update summary cards
-            document.getElementById('totalIncome').textContent = `₹${salary.toLocaleString('en-IN')}`;
-            document.getElementById('totalExpenses').textContent = `₹${totalExpenses.toLocaleString('en-IN')}`;
-            document.getElementById('leftover').textContent = `₹${leftover.toLocaleString('en-IN')}`;
-            document.getElementById('totalInvestments').textContent = `₹${totalInvestments.toLocaleString('en-IN')}`;
-
-            // Update leftover card color based on positive/negative
-            const leftoverCard = document.querySelector('.card-leftover');
-            if (leftover < 0) {
-                leftoverCard.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
-            } else {
-                leftoverCard.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
-            }
-
-            // Update chart
-            updateChart(categories);
-
-            // Update savings goal progress
-            updateSavingsGoalProgress(totalInvestments);
-        }
-
-        function updateChart(categories) {
-            const ctx = document.getElementById('budgetChart').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
-
-            if (categories.length === 0) {
-                return;
-            }
-
-            const colors = [
-                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF',
-                '#4BC0C0', '#FF6384', '#36A2EB', '#FFCE56'
-            ];
-
-            chart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: categories.map(cat => cat.name),
-                    datasets: [{
-                        data: categories.map(cat => cat.amount),
-                        backgroundColor: colors.slice(0, categories.length),
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed;
-                                    const percentage = ((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
-                                    return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function setSavingsGoal() {
-            const goalInput = document.getElementById('savingsGoal');
-            savingsGoal = parseFloat(goalInput.value) || 0;
-            
-            if (savingsGoal > 0) {
-                document.getElementById('goalProgress').style.display = 'block';
-                updateSavingsGoalProgress();
-                saveData();
-            } else {
-                document.getElementById('goalProgress').style.display = 'none';
-            }
-        }
-
-        function updateSavingsGoalProgress(currentSavings = null) {
-            if (savingsGoal <= 0) return;
-
-            if (currentSavings === null) {
-                currentSavings = 0;
-                document.querySelectorAll('.category-item').forEach(item => {
-                    const name = item.querySelector('.category-name').value || '';
-                    const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
-                    
-                    const isInvestment = investmentKeywords.some(keyword => 
-                        name.toLowerCase().includes(keyword)
-                    );
-                    if (isInvestment) {
-                        currentSavings += amount;
-                    }
-                });
-            }
-
-            const progressPercentage = Math.min((currentSavings / savingsGoal) * 100, 100);
-            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
-            document.getElementById('progressText').textContent = 
-                `₹${currentSavings.toLocaleString('en-IN')} / ₹${savingsGoal.toLocaleString('en-IN')} (${progressPercentage.toFixed(1)}%)`;
-        }
-
-        function exportToPDF() {
-            const element = document.querySelector('.container');
-            const opt = {
-                margin: 0.5,
-                filename: `Budget_${currentMonth}_${new Date().getFullYear()}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    letterRendering: true
-                },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'a4', 
-                    orientation: 'portrait' 
-                }
-            };
-
-            // Hide elements that shouldn't be in PDF
-            const noPrintElements = document.querySelectorAll('.no-print');
-            noPrintElements.forEach(el => el.style.display = 'none');
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                // Restore hidden elements
-                noPrintElements.forEach(el => el.style.display = '');
-            });
-        }
-
-        function clearData() {
-            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-                // Clear current month data
-                document.getElementById('salary').value = '';
-                document.querySelectorAll('.category-amount').forEach(input => {
-                    input.value = '';
-                });
-                
-                // Clear all stored data
-                budgetData = {};
-                savingsGoal = 0;
-                document.getElementById('savingsGoal').value = '';
-                document.getElementById('goalProgress').style.display = 'none';
-                
-                try {
-                    localStorage.removeItem('budgetPlannerData');
-                    localStorage.removeItem('savingsGoal');
-                } catch (e) {
-                    console.log('Could not clear localStorage');
-                }
-                
-                updateDisplay();
-            }
-        }
-
-        // Auto-save functionality
-        setInterval(() => {
-            if (document.getElementById('salary').value || 
-                Array.from(document.querySelectorAll('.category-amount')).some(input => input.value)) {
-                saveData();
-            }
-        }, 30000); // Auto-save every 30 seconds
-
-        // Initialize savings goal display if exists
-        if (savingsGoal > 0) {
-            document.getElementById('goalProgress').style.display = 'block';
-            updateSavingsGoalProgress();
-        }
-    </script>
-</body>
-</html>
+                if (e.target.classList.contains('category-name') || e.target.classList.contai
