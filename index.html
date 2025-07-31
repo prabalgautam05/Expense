@@ -678,3 +678,502 @@
                         <div class="amount" id="leftover">₹0</div>
                     </div>
                     <div class="summary-card card-investments">
+                        <h3>Total Investments</h3>
+                        <div class="amount" id="totalInvestments">₹0</div>
+                    </div>
+                </div>
+
+                <div class="tag-summary">
+                    <h4><i class="fas fa-tags"></i> Spending by Category</h4>
+                    <div class="tag-breakdown" id="tagBreakdown">
+                        <!-- Category breakdown will be populated here -->
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="budgetChart"></canvas>
+                </div>
+
+                <div class="export-section no-print">
+                    <button class="export-btn" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i>
+                        Export as PDF
+                    </button>
+                    <button class="export-btn" onclick="clearData()">
+                        <i class="fas fa-trash"></i>
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMonth = 'January';
+        let budgetData = {};
+        let chart = null;
+        let savingsGoal = 0;
+
+        // Investment categories that should be counted as investments
+        const investmentKeywords = ['investment', 'fund', 'sip', 'mutual', 'stock', 'equity'];
+        const savingsKeywords = ['savings', 'save', 'fd', 'deposit'];
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupEventListeners();
+            updateDisplay();
+        });
+
+        function setupEventListeners() {
+            // Month selector dropdown
+            const monthSelector = document.getElementById('monthSelector');
+            monthSelector.addEventListener('change', function() {
+                currentMonth = this.value;
+                loadData();
+                updateDisplay();
+            });
+
+            // Salary input
+            document.getElementById('salary').addEventListener('input', function() {
+                saveData();
+                updateDisplay();
+            });
+
+            // No auto-save for category inputs - only on confirmation
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('category-name') || 
+                    e.target.classList.contains('category-amount') || 
+                    e.target.classList.contains('category-dropdown')) {
+                    // Just visual feedback, no auto-save
+                    const categoryItem = e.target.closest('.category-item');
+                    if (categoryItem) {
+                        categoryItem.classList.remove('expense-added');
+                    }
+                }
+            });
+        }
+
+        function addCategory() {
+            const categoriesContainer = document.getElementById('categories');
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'category-item';
+            categoryItem.innerHTML = `
+                <div class="category-row">
+                    <input type="text" placeholder="Expense name" class="category-name">
+                    <input type="number" placeholder="0" class="category-amount" min="0">
+                    <select class="category-dropdown">
+                        <option value="">Select Category</option>
+                        <option value="Food">🍕 Food</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Bills">🧾 Bills / Household</option>
+                        <option value="Debt">💳 Debt Repayment</option>
+                        <option value="Savings">💰 Savings</option>
+                        <option value="Investment">📈 Investment</option>
+                    </select>
+                    <button class="confirm-add-btn" onclick="confirmAddExpense(this)">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="remove-category" onclick="removeCategory(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            categoriesContainer.appendChild(categoryItem);
+        }
+
+        function confirmAddExpense(button) {
+            const categoryItem = button.closest('.category-item');
+            const name = categoryItem.querySelector('.category-name').value.trim();
+            const amount = parseFloat(categoryItem.querySelector('.category-amount').value) || 0;
+            const category = categoryItem.querySelector('.category-dropdown').value;
+
+            if (!name) {
+                alert('Please enter an expense name');
+                return;
+            }
+            if (amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            if (!category) {
+                alert('Please select a category');
+                return;
+            }
+
+            // Visual feedback
+            categoryItem.classList.add('expense-added');
+            
+            // Save and update
+            saveData();
+            updateDisplay();
+            
+            // Success feedback
+            button.innerHTML = '<i class="fas fa-check-circle"></i>';
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check"></i>';
+            }, 1000);
+        }
+
+        function removeCategory(button) {
+            if (document.querySelectorAll('.category-item').length > 1) {
+                button.closest('.category-item').remove();
+                saveData();
+                updateDisplay();
+            } else {
+                alert('You must have at least one expense item!');
+            }
+        }
+
+        function saveData() {
+            if (!budgetData[currentMonth]) {
+                budgetData[currentMonth] = {};
+            }
+
+            budgetData[currentMonth].salary = parseFloat(document.getElementById('salary').value) || 0;
+            budgetData[currentMonth].categories = [];
+
+            document.querySelectorAll('.category-item').forEach(item => {
+                const name = item.querySelector('.category-name').value || 'Unnamed Category';
+                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                const category = item.querySelector('.category-dropdown').value || '';
+                
+                budgetData[currentMonth].categories.push({ name, amount, category });
+            });
+
+            // Save to localStorage
+            try {
+                localStorage.setItem('budgetPlannerData', JSON.stringify(budgetData));
+                localStorage.setItem('savingsGoal', savingsGoal.toString());
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+        }
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('budgetPlannerData');
+                const savedGoal = localStorage.getItem('savingsGoal');
+                
+                if (saved) {
+                    budgetData = JSON.parse(saved);
+                }
+                if (savedGoal) {
+                    savingsGoal = parseFloat(savedGoal);
+                    document.getElementById('savingsGoal').value = savingsGoal;
+                    if (savingsGoal > 0) {
+                        document.getElementById('goalProgress').style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.log('Could not load data from localStorage');
+                budgetData = {};
+            }
+
+            // Update month selector
+            document.getElementById('monthSelector').value = currentMonth;
+
+            // Load current month data
+            if (budgetData[currentMonth]) {
+                document.getElementById('salary').value = budgetData[currentMonth].salary || '';
+                
+                // Clear existing categories
+                document.getElementById('categories').innerHTML = '';
+                
+                // Load saved categories
+                if (budgetData[currentMonth].categories && budgetData[currentMonth].categories.length > 0) {
+                    budgetData[currentMonth].categories.forEach(category => {
+                        addCategoryWithData(category.name, category.amount, category.category || '');
+                    });
+                } else {
+                    // Add default category if none exist
+                    addCategoryWithData('Fixed Expenses', 0, 'Bills');
+                }
+            } else {
+                // Clear form for new month
+                document.getElementById('salary').value = '';
+                document.getElementById('categories').innerHTML = '';
+                addCategoryWithData('Fixed Expenses', 0, 'Bills');
+            }
+        }
+
+        function addCategoryWithData(name, amount, category = '') {
+            const categoriesContainer = document.getElementById('categories');
+            const categoryItem = document.createElement('div');
+            categoryItem.className = 'category-item';
+            if (amount > 0 && category) {
+                categoryItem.classList.add('expense-added');
+            }
+            
+            categoryItem.innerHTML = `
+                <div class="category-row">
+                    <input type="text" value="${name}" class="category-name">
+                    <input type="number" value="${amount}" class="category-amount" min="0">
+                    <select class="category-dropdown">
+                        <option value="">Select Category</option>
+                        <option value="Food" ${category === 'Food' ? 'selected' : ''}>🍕 Food</option>
+                        <option value="Transport" ${category === 'Transport' ? 'selected' : ''}>🚗 Transport</option>
+                        <option value="Bills" ${category === 'Bills' ? 'selected' : ''}>🧾 Bills / Household</option>
+                        <option value="Debt" ${category === 'Debt' ? 'selected' : ''}>💳 Debt Repayment</option>
+                        <option value="Savings" ${category === 'Savings' ? 'selected' : ''}>💰 Savings</option>
+                        <option value="Investment" ${category === 'Investment' ? 'selected' : ''}>📈 Investment</option>
+                    </select>
+                    <button class="confirm-add-btn" onclick="confirmAddExpense(this)">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="remove-category" onclick="removeCategory(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            categoriesContainer.appendChild(categoryItem);
+        }
+
+        function updateDisplay() {
+            const salary = parseFloat(document.getElementById('salary').value) || 0;
+            let totalExpenses = 0;
+            let totalInvestments = 0;
+            const categories = [];
+            const categoryTotals = {};
+
+            // Calculate totals - only count confirmed expenses
+            document.querySelectorAll('.category-item.expense-added').forEach(item => {
+                const name = item.querySelector('.category-name').value || 'Unnamed Category';
+                const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                const category = item.querySelector('.category-dropdown').value || 'Uncategorized';
+                
+                if (amount > 0) {
+                    categories.push({ name, amount, category });
+                    totalExpenses += amount;
+                    
+                    // Track category totals
+                    if (!categoryTotals[category]) {
+                        categoryTotals[category] = 0;
+                    }
+                    categoryTotals[category] += amount;
+                    
+                    // Check if this is an investment or savings
+                    const isInvestment = category === 'Investment' || 
+                        investmentKeywords.some(keyword => name.toLowerCase().includes(keyword));
+                    const isSavings = category === 'Savings' || 
+                        savingsKeywords.some(keyword => name.toLowerCase().includes(keyword));
+                    
+                    if (isInvestment || isSavings) {
+                        totalInvestments += amount;
+                    }
+                }
+            });
+
+            const leftover = salary - totalExpenses;
+
+            // Update summary cards
+            document.getElementById('totalIncome').textContent = `₹${salary.toLocaleString('en-IN')}`;
+            document.getElementById('totalExpenses').textContent = `₹${totalExpenses.toLocaleString('en-IN')}`;
+            document.getElementById('leftover').textContent = `₹${leftover.toLocaleString('en-IN')}`;
+            document.getElementById('totalInvestments').textContent = `₹${totalInvestments.toLocaleString('en-IN')}`;
+
+            // Update leftover card color based on positive/negative
+            const leftoverCard = document.querySelector('.card-leftover');
+            if (leftover < 0) {
+                leftoverCard.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+            } else {
+                leftoverCard.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            }
+
+            // Update category breakdown
+            updateCategoryBreakdown(categoryTotals);
+
+            // Update chart
+            updateChart(categories);
+
+            // Update savings goal progress
+            updateSavingsGoalProgress(totalInvestments);
+        }
+
+        function updateCategoryBreakdown(categoryTotals) {
+            const categoryBreakdown = document.getElementById('tagBreakdown');
+            categoryBreakdown.innerHTML = '';
+
+            const categoryEmojis = {
+                'Food': '🍕',
+                'Transport': '🚗',
+                'Bills': '🧾',
+                'Debt': '💳',
+                'Savings': '💰',
+                'Investment': '📈'
+            };
+
+            Object.entries(categoryTotals).forEach(([category, amount]) => {
+                const categoryItem = document.createElement('div');
+                categoryItem.className = 'tag-item';
+                categoryItem.innerHTML = `${categoryEmojis[category] || '📋'} ${category}: ₹${amount.toLocaleString('en-IN')}`;
+                categoryBreakdown.appendChild(categoryItem);
+            });
+        }
+
+        function updateChart(categories) {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (categories.length === 0) {
+                return;
+            }
+
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF',
+                '#4BC0C0', '#FF6384', '#36A2EB', '#FFCE56'
+            ];
+
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: categories.map(cat => `${cat.name} (${cat.category})`),
+                    datasets: [{
+                        data: categories.map(cat => cat.amount),
+                        backgroundColor: colors.slice(0, categories.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const percentage = ((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                                    return `${label}: ₹${value.toLocaleString('en-IN')} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setSavingsGoal() {
+            const goalInput = document.getElementById('savingsGoal');
+            savingsGoal = parseFloat(goalInput.value) || 0;
+            
+            if (savingsGoal > 0) {
+                document.getElementById('goalProgress').style.display = 'block';
+                updateSavingsGoalProgress();
+                saveData();
+            } else {
+                document.getElementById('goalProgress').style.display = 'none';
+            }
+        }
+
+        function updateSavingsGoalProgress(currentSavings = null) {
+            if (savingsGoal <= 0) return;
+
+            if (currentSavings === null) {
+                currentSavings = 0;
+                document.querySelectorAll('.category-item.expense-added').forEach(item => {
+                    const name = item.querySelector('.category-name').value || '';
+                    const amount = parseFloat(item.querySelector('.category-amount').value) || 0;
+                    const category = item.querySelector('.category-dropdown').value || '';
+                    
+                    const isInvestment = category === 'Investment' || 
+                        investmentKeywords.some(keyword => name.toLowerCase().includes(keyword));
+                    const isSavings = category === 'Savings' || 
+                        savingsKeywords.some(keyword => name.toLowerCase().includes(keyword));
+                    
+                    if (isInvestment || isSavings) {
+                        currentSavings += amount;
+                    }
+                });
+            }
+
+            const progressPercentage = Math.min((currentSavings / savingsGoal) * 100, 100);
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = 
+                `₹${currentSavings.toLocaleString('en-IN')} / ₹${savingsGoal.toLocaleString('en-IN')} (${progressPercentage.toFixed(1)}%)`;
+        }
+
+        function exportToPDF() {
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 0.5,
+                filename: `Budget_${currentMonth}_${new Date().getFullYear()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
+
+            // Hide elements that shouldn't be in PDF
+            const noPrintElements = document.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.display = 'none');
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore hidden elements
+                noPrintElements.forEach(el => el.style.display = '');
+            });
+        }
+
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                // Clear current month data
+                document.getElementById('salary').value = '';
+                document.querySelectorAll('.category-amount').forEach(input => {
+                    input.value = '';
+                });
+                
+                // Clear all stored data
+                budgetData = {};
+                savingsGoal = 0;
+                document.getElementById('savingsGoal').value = '';
+                document.getElementById('goalProgress').style.display = 'none';
+                
+                try {
+                    localStorage.removeItem('budgetPlannerData');
+                    localStorage.removeItem('savingsGoal');
+                } catch (e) {
+                    console.log('Could not clear localStorage');
+                }
+                
+                updateDisplay();
+            }
+        }
+
+        // Auto-save functionality
+        setInterval(() => {
+            if (document.getElementById('salary').value || 
+                Array.from(document.querySelectorAll('.category-amount')).some(input => input.value)) {
+                saveData();
+            }
+        }, 30000); // Auto-save every 30 seconds
+
+        // Initialize savings goal display if exists
+        if (savingsGoal > 0) {
+            document.getElementById('goalProgress').style.display = 'block';
+            updateSavingsGoalProgress();
+        }
+    </script>
+</body>
+</html>
