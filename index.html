@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget Planner</title>
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%234facfe'/><text x='50' y='65' font-size='45' text-anchor='middle' fill='white'>💰</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><circle cx='90' cy='90' r='80' fill='%234facfe'/><circle cx='90' cy='90' r='70' fill='%2300f2fe'/><text x='90' y='120' font-size='70' text-anchor='middle' fill='white'>💰</text></svg>">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4facfe">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Budget Planner">
+    <meta name="description" content="Smart personal budget planner with expense tracking, charts, and savings goals">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,{
+        'name': 'Personal Budget Planner',
+        'short_name': 'Budget Planner',
+        'description': 'Smart personal budget planner with expense tracking and savings goals',
+        'start_url': '/',
+        'display': 'standalone',
+        'background_color': '#ffffff',
+        'theme_color': '#4facfe',
+        'orientation': 'portrait',
+        'icons': [
+            {
+                'src': 'data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 192 192\"><circle cx=\"96\" cy=\"96\" r=\"88\" fill=\"%234facfe\"/><circle cx=\"96\" cy=\"96\" r=\"70\" fill=\"%2300f2fe\"/><text x=\"96\" y=\"130\" font-size=\"80\" text-anchor=\"middle\" fill=\"white\">💰</text></svg>',
+                'sizes': '192x192',
+                'type': 'image/svg+xml',
+                'purpose': 'any maskable'
+            },
+            {
+                'src': 'data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><circle cx=\"256\" cy=\"256\" r=\"240\" fill=\"%234facfe\"/><circle cx=\"256\" cy=\"256\" r=\"190\" fill=\"%2300f2fe\"/><text x=\"256\" y=\"340\" font-size=\"200\" text-anchor=\"middle\" fill=\"white\">💰</text></svg>',
+                'sizes': '512x512',
+                'type': 'image/svg+xml',
+                'purpose': 'any maskable'
+            }
+        ]
+    }">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -42,6 +80,10 @@
             font-size: 2.5rem;
             margin-bottom: 10px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .header p {
@@ -436,28 +478,55 @@
             border: 1px solid #ddd;
         }
 
+        /* Mobile Responsive Design */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
             .main-content {
                 grid-template-columns: 1fr;
-                padding: 15px;
-                gap: 20px;
+                padding: 10px;
+                gap: 15px;
             }
             
             .header {
-                padding: 20px 15px;
+                padding: 20px 10px;
             }
             
             .header h1 {
                 font-size: 1.8rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .header p {
+                font-size: 1rem;
             }
             
             .input-section, .summary-section {
-                padding: 20px 15px;
+                padding: 15px;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
             }
             
             .summary-cards {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
+                gap: 8px;
+            }
+            
+            .summary-card {
+                padding: 12px;
+            }
+            
+            .summary-card h3 {
+                font-size: 0.8rem;
+            }
+            
+            .summary-card .amount {
+                font-size: 1.2rem;
             }
             
             .month-dropdown {
@@ -466,66 +535,103 @@
             }
             
             .category-item {
-                padding: 15px 10px;
+                padding: 10px;
+                flex-direction: column;
+                align-items: stretch;
             }
             
             .category-row {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
                 align-items: stretch;
             }
             
             .category-name, .category-amount, .category-dropdown {
                 width: 100%;
+                font-size: 0.9rem;
+                padding: 10px;
             }
             
             .confirm-add-btn, .remove-category {
                 align-self: center;
-                margin-top: 5px;
+                margin: 5px;
+            }
+            
+            .confirm-add-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .remove-category {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .tag-breakdown {
+                justify-content: center;
+            }
+            
+            .tag-item {
+                font-size: 0.8rem;
+                padding: 4px 8px;
             }
         }
 
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 5px;
             }
             
             .container {
-                border-radius: 15px;
+                border-radius: 12px;
             }
             
             .header {
-                padding: 15px 10px;
+                padding: 15px 8px;
             }
             
             .header h1 {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
             
             .header p {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             
             .main-content {
-                padding: 10px;
-                gap: 15px;
+                padding: 8px;
+                gap: 10px;
             }
             
             .input-section, .summary-section {
-                padding: 15px 10px;
+                padding: 12px;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 15px;
             }
             
             .summary-cards {
-                grid-template-columns: 1fr;
-                gap: 8px;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
             }
             
             .summary-card {
-                padding: 15px;
+                padding: 10px;
+            }
+            
+            .summary-card h3 {
+                font-size: 0.75rem;
+                margin-bottom: 4px;
             }
             
             .summary-card .amount {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
             
             .month-dropdown {
@@ -533,27 +639,52 @@
                 padding: 8px 10px;
             }
             
+            .input-group label {
+                font-size: 0.9rem;
+            }
+            
+            .input-group input {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
             .category-item {
-                padding: 12px 8px;
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .category-name, .category-amount, .category-dropdown {
+                font-size: 0.85rem;
+                padding: 8px;
             }
             
             .category-dropdown {
-                font-size: 0.8rem;
+                background-size: 14px;
+            }
+            
+            .add-category-btn {
+                font-size: 0.9rem;
+                padding: 10px 15px;
             }
             
             .export-section {
-                justify-content: center;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
             
             .export-btn {
                 width: 100%;
                 justify-content: center;
+                font-size: 0.9rem;
+                padding: 10px 20px;
             }
             
             .chart-container {
-                height: 250px;
+                height: 220px;
+            }
+            
+            .savings-goal {
+                padding: 15px;
             }
             
             .goal-input {
@@ -563,6 +694,46 @@
             
             .goal-input input, .set-goal-btn {
                 width: 100%;
+                font-size: 0.9rem;
+            }
+            
+            .tag-summary {
+                padding: 10px;
+            }
+            
+            .tag-summary h4 {
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+            }
+            
+            .tag-item {
+                font-size: 0.75rem;
+                padding: 3px 6px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            
+            .category-name, .category-amount, .category-dropdown {
+                font-size: 0.8rem;
+            }
+            
+            .confirm-add-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .remove-category {
+                width: 30px;
+                height: 30px;
             }
         }
 
@@ -580,7 +751,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-chart-pie"></i> Personal Budget Planner</h1>
+            <h1>
+                <svg width="40" height="40" viewBox="0 0 100 100" style="margin-right: 10px; vertical-align: middle;">
+                    <circle cx="50" cy="50" r="45" fill="white" opacity="0.2"/>
+                    <circle cx="50" cy="50" r="35" fill="white" opacity="0.3"/>
+                    <text x="50" y="65" font-size="35" text-anchor="middle" fill="white">💰</text>
+                </svg>
+                Personal Budget Planner
+            </h1>
             <p>Take control of your finances with smart budgeting</p>
         </div>
 
@@ -723,6 +901,12 @@
             loadData();
             setupEventListeners();
             updateDisplay();
+            
+            // Register Service Worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:application/javascript,const CACHE_NAME="budget-planner-v1";const urlsToCache=["/"];self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urlsToCache)))});self.addEventListener("fetch",event=>{event.respondWith(caches.match(event.request).then(response=>response||fetch(event.request)))});')
+                .catch(err => console.log('SW registration failed'));
+            }
         });
 
         function setupEventListeners() {
